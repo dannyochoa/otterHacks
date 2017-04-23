@@ -1,7 +1,9 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect
 from werkzeug import secure_filename
+from label_image import getScores
 
+score = 0
 
 app = Flask(__name__)
 
@@ -37,8 +39,9 @@ def login_process():
 	            index = i
 	        i = i + 1
 	    img = url[index+1:]
-	    print ("IMG")
-	    os.system("python label_image.py " + img)
+	    global score
+	    score = getScores(img)
+	   # os.system("python label_image.py " + img)
 	    os.system("mv " + img + " static/")
 	    return redirect(url_for('results'))
 	    
@@ -54,20 +57,23 @@ def upload():
         # Move the file form the temporal folder to
         # the upload folder we setup
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    os.system("python label_image.py static/"+filename)
+    global score
+    score = getScores("static/"+filename)
+    #os.system("python label_image.py static/"+filename)
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
     return redirect(url_for('results'))
 	    
 @app.route('/results')
 def results():
-    return render_template("results.html")
+    print (score)
+    return render_template("results.html", rot = (score['blackrot'] * 100) , health = (score['notaleaf'] * 100) , other = (score['leaves'] * 100))
     
     
-@app.route('/static/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+#@app.route('/static/<filename>')
+#def uploaded_file(filename):
+#    return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                               filename)
 
     
     
