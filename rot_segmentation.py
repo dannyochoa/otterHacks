@@ -29,7 +29,7 @@ def find_contours(low, up, frame):
     return contours
 
 
-if __name__ == "__main__":
+def main():
     low_rot = np.array([1, 100, 70])
     up_rot = np.array([26, 255, 255])
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     total_rot_area = sum(rot_areas)
     total_leaf_area = sum(leaf_areas)
 
-    rot_ratio = float(total_rot_area/total_leaf_area)*100.00
-    print(rot_ratio)
-    # print("Leaf is ", (total_rot_area / total_leaf_area) * 100.00, "% rot")
+    rot_ratio = float(total_rot_area / total_leaf_area) * 100.00
+    return rot_ratio
 
+main()
