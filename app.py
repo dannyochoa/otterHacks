@@ -1,9 +1,11 @@
 import os
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, send_from_directory
 from werkzeug import secure_filename
 from label_image import getScores
+from rot_segmentation import getRotRatio
 
 score = 0
+img = 'moc.jpg'
 
 app = Flask(__name__)
 
@@ -38,11 +40,13 @@ def login_process():
 	        if(word == '/'):
 	            index = i
 	        i = i + 1
+	    global img
 	    img = url[index+1:]
 	    global score
 	    score = getScores(img)
 	   # os.system("python label_image.py " + img)
 	    os.system("mv " + img + " static/")
+	    img = "static/" + img
 	    return redirect(url_for('results'))
 	    
 	    
@@ -59,6 +63,8 @@ def upload():
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     global score
     score = getScores("static/"+filename)
+    global img
+    img = "static/"+filename
     #os.system("python label_image.py static/"+filename)
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
@@ -67,15 +73,22 @@ def upload():
 @app.route('/results')
 def results():
     print (score)
-    return render_template("results.html", rot = (score['blackrot'] * 100) , health = (score['notaleaf'] * 100) , other = (score['leaves'] * 100))
+    print("in results")
+    if(score['notaleaf'] > .5):
+        return render_template("results.html", rot = 'NA' , health = 'NA' , other = 'NA')
+    else:
+        print (img)
+        os.system("rm static/rot.jpg")
+        percentace_of_rot = getRotRatio(img)
+        print ("got it")
+        return render_template("final.html", rot = (score['blackrot'] * 100) , health = (score['notaleaf'] * 100) , other = (score['leaves'] * 100), percent = percentace_of_rot)
     
     
-#@app.route('/static/<filename>')
-#def uploaded_file(filename):
-#    return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                               filename)
+@app.route('/static/<img>')
+def uploaded_file(img):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               img)
 
-    
     
 if __name__ == '__main__':
     app.run(
