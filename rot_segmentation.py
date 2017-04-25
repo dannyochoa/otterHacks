@@ -21,29 +21,34 @@ def find_contours(low, up, frame):
     # cv2.imshow('frame', frame)
     # cv2.imshow('mask', mask)
     # cv2.imshow('res', res)
-    cv2.waitKey(0)
+   
     blurred = cv2.pyrMeanShiftFiltering(res, 30, 30)
     gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
     _, threshold = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    _, contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
     return contours
 
 
-def main():
+def getRotRatio(img):
     low_rot = np.array([1, 100, 70])
     up_rot = np.array([26, 255, 255])
 
     low_leaf = np.array([30, 100, 70])
     up_leaf = np.array([70, 255, 255])
     #
-    grape_leaf = cv2.imread("Newly-Infected-Leaf-Figure-1.png")
+    grape_leaf = cv2.imread(img)
 
     gl_rot_edit = grape_leaf.copy()
+
     gl_leaf_edit = grape_leaf.copy()
+
+    
+    #gl_rot_edit = grape_leaf.copy()
+    #gl_leaf_edit = grape_leaf.copy()
 
     rot_contours = find_contours(low_rot, up_rot, grape_leaf)
     cv2.drawContours(gl_rot_edit, rot_contours, -1, (0, 0, 255), 2)
-    cv2.imwrite('rot.png', gl_rot_edit)
+    cv2.imwrite('static/rot.jpg', gl_rot_edit)
 
     leaf_contours = find_contours(low_leaf, up_leaf, grape_leaf)
     # cv2.drawContours(gl_leaf_edit, leaf_contours, -1, (0, 0, 255), 2)
@@ -63,4 +68,6 @@ def main():
     rot_ratio = float(total_rot_area / total_leaf_area) * 100.00
     return rot_ratio
 
-main()
+
+if __name__ == "__main__":
+    rot_ratio = getRotRatio("/hackathon/plant/static/7178ad19-5dbf-4836-a5e7-a729a0497630--concord-grape-leaves.jpg")
