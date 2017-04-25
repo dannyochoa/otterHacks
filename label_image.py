@@ -31,4 +31,6 @@ def getScores(image_path):
             score_label_dict.update(h_s)
             print('%s (score = %.5f)' % (human_string, score))
         return score_label_dict
-        
+
+if __name__ == "__main__":
+    dummy = getScores("")

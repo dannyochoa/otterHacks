@@ -70,4 +70,5 @@ def getRotRatio(img):
 
 
 if __name__ == "__main__":
-    rot_ratio = getRotRatio("/hackathon/plant/static/7178ad19-5dbf-4836-a5e7-a729a0497630--concord-grape-leaves.jpg")
+    rot_ratio = getRotRatio("")
+    print(rot_ratio)
