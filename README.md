@@ -11,12 +11,15 @@ Python, HTML, Flask, CSS, OpenCV, TensorFlow
 
 **Challenges we ran into:**
 Working with HTML and Flask to update the generated image.
+OpenCV was used to help identify the rot that TensorFlow determined to exist. 
+TensorFlow's use of machine learning was more robust that of HAAR Cascade training. If we had more samples of rot, however,
+using cascade training to create a rot classifier might've been more intune with using OpenCV.
 
 **Accomplishments that we are proud of:**
 Successfully identifying a leaf that is rotten vs healthy vs not a leaf Successfully highlighting rot location on leaves.
 
 **What I learned:**
-HTML + Flask Image Recognition
+HTML, Flask, TensorFlow
 
 **What's next for Plant Recognition:**
-More training to recognize rot more accurately Expanding to different plants and diseases Cleaner HTML + Flask integration
+More training to recognize rot more accurately. Expansion to different plants and diseases Cleaner HTML + Flask integration
